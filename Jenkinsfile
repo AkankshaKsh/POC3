@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    DOCKERHUB_REPO = "YOUR_DOCKERHUB_USERNAME/devops-hello" // change me
+    DOCKERHUB_REPO = "kshakanksha/git-jenkins-docker" // change me
     IMAGE_TAG = "${env.BUILD_NUMBER}"
   }
 
