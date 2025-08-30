@@ -1,31 +1,15 @@
-// Jenkins Declarative Pipeline: Git → Test → Build Docker → Push → Deploy
 pipeline {
   agent any
 
   environment {
-    DOCKERHUB_REPO = "YOUR_DOCKERHUB_USERNAME/devops-poc" // <-- change me
+    DOCKERHUB_REPO = "YOUR_DOCKERHUB_USERNAME/devops-hello" // change me
     IMAGE_TAG = "${env.BUILD_NUMBER}"
-  }
-
-  options {
-    timestamps()
   }
 
   stages {
     stage('Checkout') {
       steps {
         checkout scm
-      }
-    }
-
-    stage('Install deps & Test (Node in Docker)') {
-      steps {
-        sh '''
-          docker run --rm -v "$PWD":/workspace -w /workspace node:18-alpine sh -lc "
-            npm ci &&
-            npm test
-          "
-        '''
       }
     }
 
@@ -52,8 +36,8 @@ pipeline {
     stage('Deploy container') {
       steps {
         sh '''
-          docker rm -f devops-poc || true
-          docker run -d --name devops-poc -p 3000:3000 --restart=always $DOCKERHUB_REPO:$IMAGE_TAG
+          docker rm -f devops-hello || true
+          docker run -d --name devops-hello -p 8081:80 --restart=always $DOCKERHUB_REPO:$IMAGE_TAG
         '''
       }
     }
